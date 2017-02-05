@@ -4,4 +4,4 @@ sudo docker build -t qt5.win.i686.static:5.8 .
 
 # RUN COMMAND
 
-sudo docker run --rm -v "$PWD":/src/ -w /src/ qt5.win.i686.static:5.8 <COMMAND (e.g. /bin/sh -c 'echo mycommaand'>
+sudo docker run --rm -v "$PWD":/src/ -w /src/ qt5.win.i686.static:5.8 <COMMAND (e.g. /bin/sh -c 'echo command'>
