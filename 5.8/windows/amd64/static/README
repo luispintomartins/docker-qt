@@ -1,7 +1,7 @@
 # BUILD COMMAND
 
-sudo docker build -t qt5.win.amd64.static:5.8 .
+sudo docker build -t qt5.windows.amd64.static:5.8 .
 
 # RUN COMMAND
 
-sudo docker run --rm -v "$PWD":/src/ -w /src/ qt5.win.amd64.static:5.8 <COMMAND (e.g. /bin/sh -c 'echo command'>
+sudo docker run --rm -v "$PWD":/src/ -w /src/ qt5.windows.amd64.static:5.8 <COMMAND (e.g. /bin/sh -c 'echo command'>
