@@ -48,8 +48,16 @@ WORKDIR  ./mxe
 RUN git checkout -b mxe_5_8 27facf1c6fcb7973781568dde9b0c1072e28f669
 
 RUN make MXE_TARGETS='x86_64-w64-mingw32.shared' qtbase
-RUN make MXE_TARGETS='x86_64-w64-mingw32.shared' qtserialport
+RUN make MXE_TARGETS='x86_64-w64-mingw32.shared' qt5
+RUN make MXE_TARGETS='x86_64-w64-mingw32.shared' qtcharts
+RUN make MXE_TARGETS='x86_64-w64-mingw32.shared' qtdatavis3d
+RUN make MXE_TARGETS='x86_64-w64-mingw32.shared' qtimageformats
+RUN make MXE_TARGETS='x86_64-w64-mingw32.shared' qtlocation
 RUN make MXE_TARGETS='x86_64-w64-mingw32.shared' qtmultimedia 
+RUN make MXE_TARGETS='x86_64-w64-mingw32.shared' qtserialport
+RUN make MXE_TARGETS='x86_64-w64-mingw32.shared' qtsvg
+RUN make MXE_TARGETS='x86_64-w64-mingw32.shared' qttranslations
+RUN make MXE_TARGETS='x86_64-w64-mingw32.shared' qtvirtualkeyboard
 RUN make MXE_TARGETS='x86_64-w64-mingw32.shared' qtwinextras
 
 RUN update-alternatives --install /usr/bin/qmake qmake /build/mxe/usr/bin/x86_64-w64-mingw32.shared-qmake-qt5 10

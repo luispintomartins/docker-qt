@@ -48,8 +48,16 @@ WORKDIR  ./mxe
 RUN git checkout -b mxe_5_8 27facf1c6fcb7973781568dde9b0c1072e28f669
 
 RUN make MXE_TARGETS='i686-w64-mingw32.static' qtbase
-RUN make MXE_TARGETS='i686-w64-mingw32.static' qtserialport
+RUN make MXE_TARGETS='i686-w64-mingw32.static' qt5
+RUN make MXE_TARGETS='i686-w64-mingw32.static' qtcharts
+RUN make MXE_TARGETS='i686-w64-mingw32.static' qtdatavis3d
+RUN make MXE_TARGETS='i686-w64-mingw32.static' qtimageformats
+RUN make MXE_TARGETS='i686-w64-mingw32.static' qtlocation
 RUN make MXE_TARGETS='i686-w64-mingw32.static' qtmultimedia 
+RUN make MXE_TARGETS='i686-w64-mingw32.static' qtserialport
+RUN make MXE_TARGETS='i686-w64-mingw32.static' qtsvg
+RUN make MXE_TARGETS='i686-w64-mingw32.static' qttranslations
+RUN make MXE_TARGETS='i686-w64-mingw32.static' qtvirtualkeyboard
 RUN make MXE_TARGETS='i686-w64-mingw32.static' qtwinextras
 
 RUN update-alternatives --install /usr/bin/qmake qmake /build/mxe/usr/bin/i686-w64-mingw32.static-qmake-qt5 10
