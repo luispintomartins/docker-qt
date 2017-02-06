@@ -140,20 +140,27 @@ RUN ./configure \
     -opensource \
     -confirm-license \
     \
-    -skip qtwebkit \
-    -skip qtwebsockets \
-    -skip qtwebkit-examples \
-    -skip qtwebchannel \
-    -skip qtwebengine \
-    -skip qtwayland \
-    -skip qtwinextras \
-    -skip qtsvg \
-    -skip qtsensors \
+    -skip qt3d \
+    -skip qtactiveqt \
     -skip qtcanvas3d \
     -skip qtconnectivity \
-    -skip declarative \
-    -skip multimedia \
-    -skip quick1 \
+    -skip qtdeclarative \
+    -skip qtgamepad \
+    -skip qtgraphicaleffects \
+    -skip qtpurchasing \
+    -skip qtquickcontrols \
+    -skip qtquickcontrols2 \
+    -skip qtscript \
+    -skip qtscxml \
+    -skip qtsensors \
+    -skip qtserialbus \
+    -skip qttools \
+    -skip qtwebchannel \
+    -skip qtwebkit \
+    -skip qtwebsockets \
+    -skip qtwebview \
+    -skip qtxmlpatterns \
+    -skip qtwinextras \
     \
     -nomake examples \
     -nomake tests \

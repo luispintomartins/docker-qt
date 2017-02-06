@@ -140,6 +140,51 @@ RUN ./configure \
     -opensource \
     -confirm-license \
     \
+    -skip qt3d \
+    -skip qtactiveqt \
+    -skip qtcanvas3d \
+    -skip qtconnectivity \
+    -skip qtdeclarative \
+    -skip qtgamepad \
+    -skip qtgraphicaleffects \
+    -skip qtpurchasing \
+    -skip qtquickcontrols \
+    -skip qtquickcontrols2 \
+    -skip qtscript \
+    -skip qtscxml \
+    -skip qtsensors \
+    -skip qtserialbus \
+    -skip qttools \
+    -skip qtwebchannel \
+    -skip qtwebkit \
+    -skip qtwebsockets \
+    -skip qtwebview \
+    -skip qtxmlpatterns \
+    -skip qtwinextras \
+
+5.8.0   Qt
+  5.8.0   Qt
+  5.8.0   Qt
+  5.8.0   Qt
+   5.8.0   Qt
+   5.8.0   Qt
+  5.8.0   Qt
+    5.8.0   Qt
+ 5.8.0   Qt
+    5.8.0   Qt
+    5.8.0   Qt
+ 5.8.0   Qt
+   5.8.0   Qt
+ 5.8.0   Qt
+ 5.8.0   Qt
+    5.8.0   Qt
+    5.8.0   Qt
+    5.8.0   Qt
+   5.8.0   Qt
+   5.8.0   Qt
+
+
+
     -skip qtwebkit \
     -skip qtwebsockets \
     -skip qtwebkit-examples \
