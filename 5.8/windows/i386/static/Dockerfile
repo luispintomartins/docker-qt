@@ -47,18 +47,19 @@ WORKDIR  ./mxe
 
 RUN git checkout -b mxe_5_8 27facf1c6fcb7973781568dde9b0c1072e28f669
 
-RUN make MXE_TARGETS='i386-w64-mingw32.static' qtbase
-RUN make MXE_TARGETS='i386-w64-mingw32.static' qtserialport
-RUN make MXE_TARGETS='i386-w64-mingw32.static' qtmultimedia 
-RUN make MXE_TARGETS='i386-w64-mingw32.static' qtwinextras
+RUN make MXE_TARGETS='i686-w64-mingw32.static' qtbase
+RUN make MXE_TARGETS='i686-w64-mingw32.static' qtserialport
+RUN make MXE_TARGETS='i686-w64-mingw32.static' qtmultimedia 
+RUN make MXE_TARGETS='i686-w64-mingw32.static' qtwinextras
 
-RUN ln -s /build/mxe/usr/bin/i386-w64-mingw32.static-qmake-qt5 /usr/bin/qmake
-RUN ln -s /build/mxe/usr/bin/i386-w64-mingw32.static-gcc /usr/bin/i386-w64-mingw32.static-gcc
-RUN ln -s /build/mxe/usr/bin/i386-w64-mingw32.static-g++ /usr/bin/i386-w64-mingw32.static-g++
-RUN ln -s /build/mxe/usr/bin/i386-w64-mingw32.static-windres /usr/bin/i386-w64-mingw32.static-windres
+RUN update-alternatives --install /usr/bin/qmake qmake /build/mxe/usr/bin/i686-w64-mingw32.static-qmake-qt5 10
 
-RUN ln -s /build/mxe/usr/bin/i386-w64-mingw32.static-gcc /usr/bin/mingw-gcc
-RUN ln -s /build/mxe/usr/bin/i386-w64-mingw32.static-g++ /usr/bin/mingw-g++
-RUN ln -s /build/mxe/usr/bin/i386-w64-mingw32.static-windres /usr/bin/mingw-windres
+RUN update-alternatives --install /usr/bin/mingw-gcc mingw-gcc /build/mxe/usr/bin/i686-w64-mingw32.static-gcc 10
+RUN update-alternatives --install /usr/bin/mingw-g++ mingw-g++ /build/mxe/usr/bin/i686-w64-mingw32.static-g++ 10
+RUN update-alternatives --install /usr/bin/mingw-windres mingw-windres /build/mxe/usr/bin/i686-w64-mingw32.static-windres 10
+
+RUN update-alternatives --install /usr/bin/i686-w64-mingw32.static-gcc i686-w64-mingw32.static-gcc /build/mxe/usr/bin/i686-w64-mingw32.static-gcc 10
+RUN update-alternatives --install /usr/bin/i686-w64-mingw32.static-g++ i686-w64-mingw32.static-g++ /build/mxe/usr/bin/i686-w64-mingw32.static-g++ 10
+RUN update-alternatives --install /usr/bin/i686-w64-mingw32.static-windres i686-w64-mingw32.static-windres /build/mxe/usr/bin/i686-w64-mingw32.static-windres 10
 
 RUN mkdir /src

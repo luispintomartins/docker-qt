@@ -52,13 +52,14 @@ RUN make MXE_TARGETS='x86_64-w64-mingw32.static' qtserialport
 RUN make MXE_TARGETS='x86_64-w64-mingw32.static' qtmultimedia 
 RUN make MXE_TARGETS='x86_64-w64-mingw32.static' qtwinextras
 
-RUN ln -s /build/mxe/usr/bin/x86_64-w64-mingw32.static-qmake-qt5 /usr/bin/qmake
-RUN ln -s /build/mxe/usr/bin/x86_64-w64-mingw32.static-gcc /usr/bin/x86_64-w64-mingw32.static-gcc
-RUN ln -s /build/mxe/usr/bin/x86_64-w64-mingw32.static-g++ /usr/bin/x86_64-w64-mingw32.static-g++
-RUN ln -s /build/mxe/usr/bin/x86_64-w64-mingw32.static-windres /usr/bin/x86_64-w64-mingw32.static-windres
+RUN update-alternatives --install /usr/bin/qmake qmake /build/mxe/usr/bin/x86_64-w64-mingw32.static-qmake-qt5 10
 
-RUN ln -s /build/mxe/usr/bin/x86_64-w64-mingw32.static-gcc /usr/bin/mingw-gcc
-RUN ln -s /build/mxe/usr/bin/x86_64-w64-mingw32.static-g++ /usr/bin/mingw-g++
-RUN ln -s /build/mxe/usr/bin/x86_64-w64-mingw32.static-windres /usr/bin/mingw-windres
+RUN update-alternatives --install /usr/bin/mingw-gcc mingw-gcc /build/mxe/usr/bin/x86_64-w64-mingw32.static-gcc 10
+RUN update-alternatives --install /usr/bin/mingw-g++ mingw-g++ /build/mxe/usr/bin/x86_64-w64-mingw32.static-g++ 10
+RUN update-alternatives --install /usr/bin/mingw-windres mingw-windres /build/mxe/usr/bin/x86_64-w64-mingw32.static-windres 10
+
+RUN update-alternatives --install /usr/bin/x86_64-w64-mingw32.static-gcc x86_64-w64-mingw32.static-gcc /build/mxe/usr/bin/x86_64-w64-mingw32.static-gcc 10
+RUN update-alternatives --install /usr/bin/x86_64-w64-mingw32.static-g++ x86_64-w64-mingw32.static-g++ /build/mxe/usr/bin/x86_64-w64-mingw32.static-g++ 10
+RUN update-alternatives --install /usr/bin/x86_64-w64-mingw32.static-windres x86_64-w64-mingw32.static-windres /build/mxe/usr/bin/x86_64-w64-mingw32.static-windres 10
 
 RUN mkdir /src

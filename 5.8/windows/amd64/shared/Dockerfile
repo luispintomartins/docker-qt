@@ -52,13 +52,14 @@ RUN make MXE_TARGETS='x86_64-w64-mingw32.shared' qtserialport
 RUN make MXE_TARGETS='x86_64-w64-mingw32.shared' qtmultimedia 
 RUN make MXE_TARGETS='x86_64-w64-mingw32.shared' qtwinextras
 
-RUN ln -s /build/mxe/usr/bin/x86_64-w64-mingw32.shared-qmake-qt5 /usr/bin/qmake
-RUN ln -s /build/mxe/usr/bin/x86_64-w64-mingw32.shared-gcc /usr/bin/x86_64-w64-mingw32.shared-gcc
-RUN ln -s /build/mxe/usr/bin/x86_64-w64-mingw32.shared-g++ /usr/bin/x86_64-w64-mingw32.shared-g++
-RUN ln -s /build/mxe/usr/bin/x86_64-w64-mingw32.shared-windres /usr/bin/x86_64-w64-mingw32.shared-windres
+RUN update-alternatives --install /usr/bin/qmake qmake /build/mxe/usr/bin/x86_64-w64-mingw32.shared-qmake-qt5 10
 
-RUN ln -s /build/mxe/usr/bin/x86_64-w64-mingw32.shared-gcc /usr/bin/mingw-gcc
-RUN ln -s /build/mxe/usr/bin/x86_64-w64-mingw32.shared-g++ /usr/bin/mingw-g++
-RUN ln -s /build/mxe/usr/bin/x86_64-w64-mingw32.shared-windres /usr/bin/mingw-windres
+RUN update-alternatives --install /usr/bin/mingw-gcc mingw-gcc /build/mxe/usr/bin/x86_64-w64-mingw32.shared-gcc 10
+RUN update-alternatives --install /usr/bin/mingw-g++ mingw-g++ /build/mxe/usr/bin/x86_64-w64-mingw32.shared-g++ 10
+RUN update-alternatives --install /usr/bin/mingw-windres mingw-windres /build/mxe/usr/bin/x86_64-w64-mingw32.shared-windres 10
+
+RUN update-alternatives --install /usr/bin/x86_64-w64-mingw32.shared-gcc x86_64-w64-mingw32.shared-gcc /build/mxe/usr/bin/x86_64-w64-mingw32.shared-gcc 10
+RUN update-alternatives --install /usr/bin/x86_64-w64-mingw32.shared-g++ x86_64-w64-mingw32.shared-g++ /build/mxe/usr/bin/x86_64-w64-mingw32.shared-g++ 10
+RUN update-alternatives --install /usr/bin/x86_64-w64-mingw32.shared-windres x86_64-w64-mingw32.shared-windres /build/mxe/usr/bin/x86_64-w64-mingw32.shared-windres 10
 
 RUN mkdir /src
