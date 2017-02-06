@@ -1,0 +1,197 @@
+FROM ubuntu:16.04
+
+RUN dpkg --add-architecture i386
+RUN apt-get update
+RUN apt-get -y install \
+    wget \
+    tar \
+    coreutils \
+    bison \
+    build-essential \
+    flex \
+    gperf \
+    perl \
+    python \
+    ruby \
+    gcc-5 \
+    g++-5 \
+    lib32gcc-5-dev \
+    lib32stdc++-5-dev \
+    libssl-dev:i386 \
+    libcrypto++-dev:i386 \
+    libsqlite3-dev:i386 \
+    libmysqlclient-dev:i386 \
+    libpq-dev:i386 \
+    ibgstreamer-plugins-base0.10-dev:i386 \
+    libasound2-dev:i386 \
+    libatkmm-1.6-dev:i386 \
+    libbz2-dev:i386 \
+    libcap-dev:i386 \
+    libcups2-dev:i386 \
+    libdrm-dev:i386 \
+    libegl1-mesa-dev:i386 \
+    libfontconfig1-dev:i386 \
+    libfreetype6-dev:i386 \
+    libgcrypt20-dev:i386 \
+    libglu1-mesa-dev:i386 \
+    libgstreamer0.10-dev:i386 \
+    libicu-dev:i386 \
+    libnss3-dev:i386 \
+    libpci-dev:i386 \
+    libpulse-dev:i386 \
+    libssl-dev:i386 \
+    libudev-dev:i386 \
+    libx11-dev:i386 \
+    libx11-xcb-dev:i386 \
+    libxcb-composite0:i386 \
+    libxcb-composite0-dev:i386 \
+    libxcb-cursor-dev:i386 \
+    libxcb-cursor0:i386 \
+    libxcb-damage0:i386 \
+    libxcb-damage0-dev:i386 \
+    libxcb-dpms0:i386 \
+    libxcb-dpms0-dev:i386 \
+    libxcb-dri2-0:i386 \
+    libxcb-dri2-0-dev:i386 \
+    libxcb-dri3-0:i386 \
+    libxcb-dri3-dev:i386 \
+    libxcb-ewmh-dev:i386 \
+    libxcb-ewmh2:i386 \
+    libxcb-glx0:i386 \
+    libxcb-glx0-dev:i386 \
+    libxcb-icccm4:i386 \
+    libxcb-icccm4-dev:i386 \
+    libxcb-image0:i386 \
+    libxcb-image0-dev:i386 \
+    libxcb-keysyms1:i386 \
+    libxcb-keysyms1-dev:i386 \
+    libxcb-present-dev:i386 \
+    libxcb-present0:i386 \
+    libxcb-randr0:i386 \
+    libxcb-randr0-dev:i386 \
+    libxcb-record0:i386 \
+    libxcb-record0-dev:i386 \
+    libxcb-render-util0:i386 \
+    libxcb-render-util0-dev:i386 \
+    libxcb-render0:i386 \
+    libxcb-render0-dev:i386 \
+    libxcb-res0:i386 \
+    libxcb-res0-dev:i386 \
+    libxcb-screensaver0:i386 \
+    libxcb-screensaver0-dev:i386 \
+    libxcb-shape0:i386 \
+    libxcb-shape0-dev:i386 \
+    libxcb-shm0:i386 \
+    libxcb-shm0-dev:i386 \
+    libxcb-sync-dev:i386 \
+    libxcb-sync0-dev:i386 \
+    libxcb-sync1:i386 \
+    libxcb-util-dev:i386 \
+    libxcb-util0-dev:i386 \
+    libxcb-util1:i386 \
+    libxcb-xevie0:i386 \
+    libxcb-xevie0-dev:i386 \
+    libxcb-xf86dri0:i386 \
+    libxcb-xf86dri0-dev:i386 \
+    libxcb-xfixes0:i386 \
+    libxcb-xfixes0-dev:i386 \
+    libxcb-xinerama0:i386 \
+    libxcb-xinerama0-dev:i386 \
+    libxcb-xkb-dev:i386 \
+    libxcb-xkb1:i386 \
+    libxcb-xprint0:i386 \
+    libxcb-xprint0-dev:i386 \
+    libxcb-xtest0:i386 \
+    libxcb-xtest0-dev:i386 \
+    libxcb-xv0:i386 \
+    libxcb-xv0-dev:i386 \
+    libxcb-xvmc0:i386 \
+    libxcb-xvmc0-dev:i386 \
+    libxcb1:i386 \
+    libxcb1-dev:i386 \
+    libxcomposite-dev:i386 \
+    libxcursor-dev:i386 \
+    libxdamage-dev:i386 \
+    libxext-dev:i386 \
+    libxfixes-dev:i386 \
+    libxi-dev:i386 \
+    libxrandr-dev:i386 \
+    libxrender-dev:i386 \
+    libxslt-dev:i386 \
+    libxss-dev:i386 \
+    libxtst-dev:i386
+
+RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 10
+RUN update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 10
+
+RUN mkdir /build
+
+WORKDIR /build
+
+RUN wget -q https://download.qt.io/snapshots/qt/5.8/5.8.0/latest_src/qt-everywhere-opensource-src-5.8.0.tar.gz
+RUN tar -zxf qt-everywhere-opensource-src-5.8.0.tar.gz
+
+WORKDIR  ./qt-everywhere-opensource-src-5.8.0
+
+RUN ./configure \
+    -v \
+    -release \
+    -platform linux-g++-32 \
+    -opensource \
+    -confirm-license \
+    \
+    -skip qtwebkit \
+    -skip qtwebsockets \
+    -skip qtwebkit-examples \
+    -skip qtwebchannel \
+    -skip qtwebengine \
+    -skip qtwayland \
+    -skip qtwinextras \
+    -skip qtsvg \
+    -skip qtsensors \
+    -skip qtcanvas3d \
+    -skip qtconnectivity \
+    -skip declarative \
+    -skip multimedia \
+    -skip quick1 \
+    \
+    -nomake examples \
+    -nomake tests \
+    \
+    -no-compile-examples \
+    -no-libproxy \
+    -no-icu \
+    -no-gif \
+    -no-journald \
+    -no-glib \
+    -no-cups \
+    -no-iconv \
+    -no-tslib \
+    -no-kms \
+    -no-evdev \
+    -no-xkbcommon-evdev \
+    \
+    -qt-xcb \
+    -qt-zlib \
+    -qt-libpng \
+    -qt-libjpeg \
+    -qt-freetype \
+    -qt-harfbuzz \
+    -qt-pcre \
+    \
+    -sql-mysql \
+    -sql-psql \
+    -sqlite \
+    \
+    -dbus-runtime \
+    \
+    -openssl-runtime
+
+RUN make -k -j$(nproc --all)
+RUN make -k install
+
+RUN update-alternatives --install /usr/bin/qmake qmake /usr/local/Qt-5.8.0/bin/qmake 10
+
+RUN rm -rf /build
+
+RUN mkdir /src
