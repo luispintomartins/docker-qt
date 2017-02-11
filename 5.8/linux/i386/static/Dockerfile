@@ -18,7 +18,6 @@ RUN apt-get -y install \
     lib32gcc-5-dev \
     lib32stdc++-5-dev \
     libc6-dev:i386 \
-    zlib1g-dev:i386 \
     libsqlite3-dev:i386 \
     libmysqlclient-dev:i386 \
     libpq-dev:i386 \
@@ -122,8 +121,6 @@ RUN apt-get -y install \
     libxtst-dev:i386 \
     libexpat1-dev:i386 \
     libevdev-dev:i386 \
-    libinput-dev:i386 \
-    libmtdev-dev:i386 \
     libxkbcommon-dev:i386 \
     libxkbcommon-x11-dev:i386
 
@@ -131,6 +128,35 @@ RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 10
 RUN update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 10
 
 RUN mkdir /build
+
+WORKDIR /build
+
+RUN wget -q http://dbus.freedesktop.org/releases/dbus/dbus-1.10.14.tar.gz
+RUN tar -zxf dbus-1.10.14.tar.gz
+
+WORKDIR /build/dbus-1.10.14
+
+RUN ./configure \
+    --build=i686-pc-linux-gnu \
+    "CFLAGS=-m32" \
+    "CXXFLAGS=-m32" \
+    "LDFLAGS=-m32"
+
+RUN make -k -j$(nproc --all)
+RUN make install
+
+WORKDIR /build
+
+RUN wget -q http://www.zlib.net/zlib-1.2.11.tar.gz
+RUN tar -zxf zlib-1.2.11.tar.gz
+
+WORKDIR /build/zlib-1.2.11
+
+RUN CFLAGS=-m32 \
+    ./configure
+    
+RUN make -k -j$(nproc --all)
+RUN make install
 
 WORKDIR /build
 
@@ -142,9 +168,14 @@ WORKDIR /build/openssl-1.0.2k
 RUN setarch i386 \
     ./config \
     -m32 \
-    no-shared
+    no-shared \
+    zlib \
+    --with-zlib-include=/build/zlib-1.2.11/include \
+    --with-zlib-lib=/build/zlib-1.2.11/ \
+    -lz
 
 RUN make -k -j$(nproc --all)
+RUN make install
 
 WORKDIR /build
 
@@ -155,13 +186,14 @@ WORKDIR /build/qt-everywhere-opensource-src-5.8.0
 
 RUN sed -i -E -e 's|(QMAKE\_LFLAGS.*)|\1 -ldl|g' /build/qt-everywhere-opensource-src-5.8.0/qtbase/mkspecs/linux-g++-32/qmake.conf
 
-RUN OPENSSL_LIBS="-lssl -lcrypto -I /build/openssl-1.0.2k/include -L /build/openssl-1.0.2k" \
+RUN PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/usr/local/ssl/lib/pkgconfig:/usr/local/lib/pkgconfig" \
     ./configure \
     -v \
     -release \
     -platform linux-g++-32 \
     -opensource \
     -confirm-license \
+    -force-pkg-config \
     \
     -skip qt3d \
     -skip qtactiveqt \
@@ -195,7 +227,6 @@ RUN OPENSSL_LIBS="-lssl -lcrypto -I /build/openssl-1.0.2k/include -L /build/open
     -no-gif \
     -no-journald \
     -no-glib \
-    -no-dbus \
     -no-cups \
     -no-iconv \
     -no-tslib \
@@ -213,6 +244,8 @@ RUN OPENSSL_LIBS="-lssl -lcrypto -I /build/openssl-1.0.2k/include -L /build/open
     -sql-mysql \
     -sql-psql \
     -sqlite \
+    \
+    -dbus-linked \
     \
     -openssl-linked
 
