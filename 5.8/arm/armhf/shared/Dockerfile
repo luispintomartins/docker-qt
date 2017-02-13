@@ -149,10 +149,7 @@ RUN ./configure \
     -confirm-license \
     \
     -xplatform linux-arm-gnueabihf-g++ \
-#    -device linux-rasp-pi3-g++ \
-#    -device-option \
     -sysroot / \
-#    -hostprefix / \
     \
     -skip qt3d \
     -skip qtactiveqt \
