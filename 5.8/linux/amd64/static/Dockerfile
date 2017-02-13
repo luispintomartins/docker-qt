@@ -189,6 +189,7 @@ RUN sed -i -E -e 's|(QMAKE\_LFLAGS.*)|\1 -ldl|g' qtbase/mkspecs/linux-g++-64/qma
 RUN PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/usr/local/ssl/lib/pkgconfig:/usr/local/lib/pkgconfig" \
     ./configure \
     -v \
+    -static \
     -release \
     -platform linux-g++-64 \
     -opensource \
