@@ -193,7 +193,7 @@ RUN cp -R qtbase/mkspecs/linux-arm-gnueabi-g++ qtbase/mkspecs/linux-arm-gnueabih
 
 RUN sed -i -E -e 's|arm-linux-gnueabi-(.*)|arm-linux-gnueabihf-\1|g' qtbase/mkspecs/linux-arm-gnueabihf-g++/qmake.conf
 
-RUN PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/usr/local/ssl/lib/pkgconfig:/usr/local/lib/pkgconfig" \
+RUN PKG_CONFIG_PATH="/usr/local/ssl/lib/pkgconfig:/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH" \
     ./configure \
     -v \
     -static \

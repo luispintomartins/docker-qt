@@ -189,7 +189,7 @@ RUN tar -zxf qt-everywhere-opensource-src-5.8.0.tar.gz
 
 WORKDIR  /build/qt-everywhere-opensource-src-5.8.0
 
-RUN PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/usr/local/ssl/lib/pkgconfig:/usr/local/lib/pkgconfig" \
+RUN PKG_CONFIG_PATH="/usr/local/ssl/lib/pkgconfig:/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH" \
     ./configure \
     -v \
     -static \
