@@ -20,8 +20,8 @@ RUN apt-get -y install \
     libssl-dev \
     libcrypto++-dev \
     libsqlite3-dev \
-    libmysqlclient-dev \
-    libpq-dev \
+#    libmysqlclient-dev \
+#    libpq-dev \
     ibgstreamer-plugins-base0.10-dev \
     libasound2-dev \
     libatkmm-1.6-dev \
@@ -161,44 +161,6 @@ RUN ./configure \
     -skip qtwebview \
     -skip qtxmlpatterns \
     -skip qtwinextras \
-
-5.8.0   Qt
-  5.8.0   Qt
-  5.8.0   Qt
-  5.8.0   Qt
-   5.8.0   Qt
-   5.8.0   Qt
-  5.8.0   Qt
-    5.8.0   Qt
- 5.8.0   Qt
-    5.8.0   Qt
-    5.8.0   Qt
- 5.8.0   Qt
-   5.8.0   Qt
- 5.8.0   Qt
- 5.8.0   Qt
-    5.8.0   Qt
-    5.8.0   Qt
-    5.8.0   Qt
-   5.8.0   Qt
-   5.8.0   Qt
-
-
-
-    -skip qtwebkit \
-    -skip qtwebsockets \
-    -skip qtwebkit-examples \
-    -skip qtwebchannel \
-    -skip qtwebengine \
-    -skip qtwayland \
-    -skip qtwinextras \
-    -skip qtsvg \
-    -skip qtsensors \
-    -skip qtcanvas3d \
-    -skip qtconnectivity \
-    -skip declarative \
-    -skip multimedia \
-    -skip quick1 \
     \
     -nomake examples \
     -nomake tests \
@@ -224,8 +186,8 @@ RUN ./configure \
     -qt-harfbuzz \
     -qt-pcre \
     \
-    -sql-mysql \
-    -sql-psql \
+#    -sql-mysql \
+#    -sql-psql \
     -sqlite \
     \
     -dbus-runtime \

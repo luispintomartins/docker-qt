@@ -19,8 +19,8 @@ RUN apt-get -y install \
     libstdc++-5-dev:amd64 \
     libc6-dev:amd64 \
     libsqlite3-dev:amd64 \
-    libmysqlclient-dev:amd64 \
-    libpq-dev:amd64 \
+#    libmysqlclient-dev:amd64 \
+#    libpq-dev:amd64 \
     ibgstreamer-plugins-base0.10-dev:amd64 \
     libasound2-dev:amd64 \
     libatkmm-1.6-dev:amd64 \
@@ -186,7 +186,7 @@ WORKDIR /build/qt-everywhere-opensource-src-5.8.0
 
 RUN sed -i -E -e 's|(QMAKE\_LFLAGS.*)|\1 -ldl|g' qtbase/mkspecs/linux-g++-64/qmake.conf
 
-RUN PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/usr/local/ssl/lib/pkgconfig:/usr/local/lib/pkgconfig" \
+RUN PKG_CONFIG_PATH="/usr/local/ssl/lib/pkgconfig:/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH" \
     ./configure \
     -v \
     -static \
@@ -242,8 +242,8 @@ RUN PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/usr/local/ssl/lib/pkgconfig:/usr/local/li
     -qt-harfbuzz \
     -qt-pcre \
     \
-    -sql-mysql \
-    -sql-psql \
+#    -sql-mysql \
+#    -sql-psql \
     -sqlite \
     \
     -dbus-linked \

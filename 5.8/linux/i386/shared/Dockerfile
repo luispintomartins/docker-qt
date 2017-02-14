@@ -20,8 +20,8 @@ RUN apt-get -y install \
     libssl-dev:i386 \
     libcrypto++-dev:i386 \
     libsqlite3-dev:i386 \
-    libmysqlclient-dev:i386 \
-    libpq-dev:i386 \
+#    libmysqlclient-dev:i386 \
+#    libpq-dev:i386 \
     ibgstreamer-plugins-base0.10-dev:i386 \
     libasound2-dev:i386 \
     libatkmm-1.6-dev:i386 \
@@ -186,8 +186,8 @@ RUN ./configure \
     -qt-harfbuzz \
     -qt-pcre \
     \
-    -sql-mysql \
-    -sql-psql \
+#    -sql-mysql \
+#    -sql-psql \
     -sqlite \
     \
     -dbus-runtime \
