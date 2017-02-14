@@ -28,8 +28,8 @@ RUN apt-get install -y \
     libfl-dev:armhf \
     libssl-dev:armhf \
     libcrypto++-dev:armhf \
-    libsqlite3-dev:armhf \
-    libmysqlclient-dev:armhf \
+#    libsqlite3-dev:armhf \
+#    libmysqlclient-dev:armhf \
     libpq-dev:armhf \
     ibgstreamer-plugins-base0.10-dev:armhf \
     libasound2-dev:armhf \
@@ -197,8 +197,8 @@ RUN ./configure \
     -qt-harfbuzz \
     -qt-pcre \
     \
-    -sql-mysql \
-    -sql-psql \
+#    -sql-mysql \
+#    -sql-psql \
     -sqlite \
     \
     -dbus-runtime \

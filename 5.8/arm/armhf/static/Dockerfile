@@ -29,8 +29,8 @@ RUN apt-get install -y \
     libssl-dev:armhf \
     libcrypto++-dev:armhf \
     libsqlite3-dev:armhf \
-    libmysqlclient-dev:armhf \
-    libpq-dev:armhf \
+#    libmysqlclient-dev:armhf \
+#    libpq-dev:armhf \
     ibgstreamer-plugins-base0.10-dev:armhf \
     libasound2-dev:armhf \
     libatkmm-1.6-dev:armhf \
@@ -251,8 +251,8 @@ RUN PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/usr/local/ssl/lib/pkgconfig:/usr/local/li
     -qt-harfbuzz \
     -qt-pcre \
     \
-    -sql-mysql \
-    -sql-psql \
+#    -sql-mysql \
+#    -sql-psql \
     -sqlite \
     \
     -dbus-runtime \
