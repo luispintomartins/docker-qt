@@ -10,24 +10,25 @@ RUN echo "deb http://emdebian.org/tools/debian/ jessie main" >> /etc/apt/sources
 
 RUN apt-get update
 
-RUN apt-get install -y \
+RUN apt-get -y install \
     wget \
     tar \
     coreutils \
     bison \
+    build-essential \
     flex \
     gperf \
     perl \
     python \
     ruby \
-    qt5-qmake \
+#    ncurses-dev:armhf \
+#    libfl-dev:armhf \
+#    gfortran-arm-linux-gnueabihf \
     crossbuild-essential-armhf \
-    gfortran-arm-linux-gnueabihf \
-    ncurses-dev:armhf \
-    libexpat1-dev:armhf \
-    libfl-dev:armhf \
+    qt5-qmake \
     libssl-dev:armhf \
     libcrypto++-dev:armhf \
+    libc6-dev:armhf \
     libsqlite3-dev:armhf \
 #    libmysqlclient-dev:armhf \
 #    libpq-dev:armhf \
@@ -127,7 +128,11 @@ RUN apt-get install -y \
     libxrender-dev:armhf \
     libxslt-dev:armhf \
     libxss-dev:armhf \
-    libxtst-dev:armhf
+    libxtst-dev:armhf \
+    libexpat1-dev:armhf \
+    libevdev-dev:armhf \
+    libxkbcommon-dev:armhf \
+    libxkbcommon-x11-dev:armhf
 
 RUN mkdir /build
 
@@ -184,7 +189,7 @@ RUN make install
 
 WORKDIR /build
 
-RUN wget -q https://download.qt.io/snapshots/qt/5.8/5.8.0/latest_src/qt-everywhere-opensource-src-5.8.0.tar.gz
+RUN wget -q http://download.qt.io/archive/qt/5.8/5.8.0/single/qt-everywhere-opensource-src-5.8.0.tar.gz
 RUN tar -zxf qt-everywhere-opensource-src-5.8.0.tar.gz
 
 WORKDIR  /build/qt-everywhere-opensource-src-5.8.0
@@ -193,16 +198,13 @@ RUN cp -R qtbase/mkspecs/linux-arm-gnueabi-g++ qtbase/mkspecs/linux-arm-gnueabih
 
 RUN sed -i -E -e 's|arm-linux-gnueabi-(.*)|arm-linux-gnueabihf-\1|g' qtbase/mkspecs/linux-arm-gnueabihf-g++/qmake.conf
 
-RUN PKG_CONFIG_PATH="/usr/local/ssl/lib/pkgconfig:/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH" \
-    ./configure \
+RUN ./configure \
     -v \
     -static \
     -release \
+    -xplatform linux-arm-gnueabihf-g++ \
     -opensource \
     -confirm-license \
-    -force-pkg-config \
-    \
-    -xplatform linux-arm-gnueabihf-g++ \
     -sysroot / \
     \
     -skip qt3d \
@@ -220,6 +222,7 @@ RUN PKG_CONFIG_PATH="/usr/local/ssl/lib/pkgconfig:/usr/local/lib/pkgconfig:$PKG_
     -skip qtsensors \
     -skip qtserialbus \
     -skip qttools \
+    -skip qtwayland \
     -skip qtwebchannel \
     -skip qtwebkit \
     -skip qtwebsockets \
@@ -240,10 +243,9 @@ RUN PKG_CONFIG_PATH="/usr/local/ssl/lib/pkgconfig:/usr/local/lib/pkgconfig:$PKG_
     -no-iconv \
     -no-tslib \
     -no-kms \
-    -no-evdev \
-    -no-xkbcommon-evdev \
     \
     -qt-xcb \
+    -qt-xkbcommon-x11 \
     -qt-zlib \
     -qt-libpng \
     -qt-libjpeg \
@@ -255,9 +257,12 @@ RUN PKG_CONFIG_PATH="/usr/local/ssl/lib/pkgconfig:/usr/local/lib/pkgconfig:$PKG_
 #    -sql-psql \
     -sqlite \
     \
-    -dbus-runtime \
+    -dbus-linked \
     \
-    -openssl-runtime
+    -openssl-linked \
+    \
+    -I/usr/local/ssl/include \
+    -I/usr/local/include
 
 RUN make -k -j$(nproc --all)
 RUN make -k install

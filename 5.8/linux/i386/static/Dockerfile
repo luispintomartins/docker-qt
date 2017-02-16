@@ -17,6 +17,8 @@ RUN apt-get -y install \
     g++-5 \
     lib32gcc-5-dev \
     lib32stdc++-5-dev \
+#    libssl-dev:i386 \
+#    libcrypto++-dev:i386 \
     libc6-dev:i386 \
     libsqlite3-dev:i386 \
 #    libmysqlclient-dev:i386 \
@@ -38,7 +40,6 @@ RUN apt-get -y install \
     libnss3-dev:i386 \
     libpci-dev:i386 \
     libpulse-dev:i386 \
-    libssl-dev:i386 \
     libudev-dev:i386 \
     libx11-dev:i386 \
     libx11-xcb-dev:i386 \
@@ -170,8 +171,8 @@ RUN setarch i386 \
     -m32 \
     no-shared \
     zlib \
-    --with-zlib-include=/build/zlib-1.2.11/include \
-    --with-zlib-lib=/build/zlib-1.2.11/ \
+    --with-zlib-include=/usr/local/lib/include \
+    --with-zlib-lib=/usr/local/lib \
     -lz
 
 RUN make -k -j$(nproc --all)
@@ -186,15 +187,13 @@ WORKDIR /build/qt-everywhere-opensource-src-5.8.0
 
 RUN sed -i -E -e 's|(QMAKE\_LFLAGS.*)|\1 -ldl|g' qtbase/mkspecs/linux-g++-32/qmake.conf
 
-RUN PKG_CONFIG_PATH="/usr/local/ssl/lib/pkgconfig:/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH" \
-    ./configure \
+RUN ./configure \
     -v \
     -static \
     -release \
     -platform linux-g++-32 \
     -opensource \
     -confirm-license \
-    -force-pkg-config \
     \
     -skip qt3d \
     -skip qtactiveqt \
@@ -246,9 +245,12 @@ RUN PKG_CONFIG_PATH="/usr/local/ssl/lib/pkgconfig:/usr/local/lib/pkgconfig:$PKG_
 #    -sql-psql \
     -sqlite \
     \
-    -dbus-linked \
+    -dbus-runtime \
     \
-    -openssl-linked
+    -openssl-runtime \
+    \
+    -I/usr/local/ssl/include \
+    -I/usr/local/include
 
 RUN make -k -j$(nproc --all)
 RUN make -k install

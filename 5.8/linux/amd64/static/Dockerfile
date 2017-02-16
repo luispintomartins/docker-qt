@@ -16,7 +16,10 @@ RUN apt-get -y install \
     gcc-5 \
     g++-5 \
     libgcc-5-dev:amd64 \
-    libstdc++-5-dev:amd64 \
+    lib32gcc-5-dev:amd64 \
+    lib32stdc++-5-dev:amd64 \
+#    libssl-dev:amd64 \
+#    libcrypto++-dev:amd64 \
     libc6-dev:amd64 \
     libsqlite3-dev:amd64 \
 #    libmysqlclient-dev:amd64 \
@@ -38,7 +41,6 @@ RUN apt-get -y install \
     libnss3-dev:amd64 \
     libpci-dev:amd64 \
     libpulse-dev:amd64 \
-    libssl-dev:amd64 \
     libudev-dev:amd64 \
     libx11-dev:amd64 \
     libx11-xcb-dev:amd64 \
@@ -186,15 +188,13 @@ WORKDIR /build/qt-everywhere-opensource-src-5.8.0
 
 RUN sed -i -E -e 's|(QMAKE\_LFLAGS.*)|\1 -ldl|g' qtbase/mkspecs/linux-g++-64/qmake.conf
 
-RUN PKG_CONFIG_PATH="/usr/local/ssl/lib/pkgconfig:/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH" \
-    ./configure \
+RUN ./configure \
     -v \
     -static \
     -release \
     -platform linux-g++-64 \
     -opensource \
     -confirm-license \
-    -force-pkg-config \
     \
     -skip qt3d \
     -skip qtactiveqt \
@@ -248,7 +248,10 @@ RUN PKG_CONFIG_PATH="/usr/local/ssl/lib/pkgconfig:/usr/local/lib/pkgconfig:$PKG_
     \
     -dbus-linked \
     \
-    -openssl-linked
+    -openssl-linked \
+    \
+    -I/usr/local/ssl/include \
+    -I/usr/local/include
 
 RUN make -k -j$(nproc --all)
 RUN make -k install

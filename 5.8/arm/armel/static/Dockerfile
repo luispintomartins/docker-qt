@@ -189,16 +189,13 @@ RUN tar -zxf qt-everywhere-opensource-src-5.8.0.tar.gz
 
 WORKDIR  /build/qt-everywhere-opensource-src-5.8.0
 
-RUN PKG_CONFIG_PATH="/usr/local/ssl/lib/pkgconfig:/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH" \
-    ./configure \
+RUN ./configure \
     -v \
     -static \
     -release \
+    -xplatform linux-arm-gnueabi-g++ \
     -opensource \
     -confirm-license \
-    -force-pkg-config \
-    \
-    -xplatform linux-arm-gnueabi-g++ \
     -sysroot / \
     \
     -skip qt3d \
@@ -216,6 +213,7 @@ RUN PKG_CONFIG_PATH="/usr/local/ssl/lib/pkgconfig:/usr/local/lib/pkgconfig:$PKG_
     -skip qtsensors \
     -skip qtserialbus \
     -skip qttools \
+    -skip qtwayland \
     -skip qtwebchannel \
     -skip qtwebkit \
     -skip qtwebsockets \
@@ -251,9 +249,12 @@ RUN PKG_CONFIG_PATH="/usr/local/ssl/lib/pkgconfig:/usr/local/lib/pkgconfig:$PKG_
 #    -sql-psql \
     -sqlite \
     \
-    -dbus-runtime \
+    -dbus-linked \
     \
-    -openssl-runtime
+    -openssl-linked \
+    \
+    -I/usr/local/ssl/include \
+    -I/usr/local/include
 
 RUN make -k -j$(nproc --all)
 RUN make -k install

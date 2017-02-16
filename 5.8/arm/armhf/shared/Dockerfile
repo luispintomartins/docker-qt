@@ -10,27 +10,28 @@ RUN echo "deb http://emdebian.org/tools/debian/ jessie main" >> /etc/apt/sources
 
 RUN apt-get update
 
-RUN apt-get install -y \
+RUN apt-get -y install \
     wget \
     tar \
     coreutils \
     bison \
+    build-essential \
     flex \
     gperf \
     perl \
     python \
     ruby \
-    qt5-qmake \
+#    ncurses-dev:armhf \
+#    libfl-dev:armhf \
+#    gfortran-arm-linux-gnueabihf \
     crossbuild-essential-armhf \
-    gfortran-arm-linux-gnueabihf \
-    ncurses-dev:armhf \
-    libexpat1-dev:armhf \
-    libfl-dev:armhf \
+    qt5-qmake \
     libssl-dev:armhf \
     libcrypto++-dev:armhf \
-#    libsqlite3-dev:armhf \
+    libc6-dev:armhf \
+    libsqlite3-dev:armhf \
 #    libmysqlclient-dev:armhf \
-    libpq-dev:armhf \
+#    libpq-dev:armhf \
     ibgstreamer-plugins-base0.10-dev:armhf \
     libasound2-dev:armhf \
     libatkmm-1.6-dev:armhf \
@@ -127,13 +128,17 @@ RUN apt-get install -y \
     libxrender-dev:armhf \
     libxslt-dev:armhf \
     libxss-dev:armhf \
-    libxtst-dev:armhf
+    libxtst-dev:armhf \
+    libexpat1-dev:armhf \
+    libevdev-dev:armhf \
+    libxkbcommon-dev:armhf \
+    libxkbcommon-x11-dev:armhf
 
 RUN mkdir /build
 
 WORKDIR /build
 
-RUN wget -q https://download.qt.io/snapshots/qt/5.8/5.8.0/latest_src/qt-everywhere-opensource-src-5.8.0.tar.gz
+RUN wget -q http://download.qt.io/archive/qt/5.8/5.8.0/single/qt-everywhere-opensource-src-5.8.0.tar.gz
 RUN tar -zxf qt-everywhere-opensource-src-5.8.0.tar.gz
 
 WORKDIR  /build/qt-everywhere-opensource-src-5.8.0
@@ -145,10 +150,9 @@ RUN sed -i -E -e 's|arm-linux-gnueabi-(.*)|arm-linux-gnueabihf-\1|g' qtbase/mksp
 RUN ./configure \
     -v \
     -release \
+    -xplatform linux-arm-gnueabihf-g++ \
     -opensource \
     -confirm-license \
-    \
-    -xplatform linux-arm-gnueabihf-g++ \
     -sysroot / \
     \
     -skip qt3d \
@@ -166,6 +170,7 @@ RUN ./configure \
     -skip qtsensors \
     -skip qtserialbus \
     -skip qttools \
+    -skip qtwayland \
     -skip qtwebchannel \
     -skip qtwebkit \
     -skip qtwebsockets \
@@ -186,10 +191,9 @@ RUN ./configure \
     -no-iconv \
     -no-tslib \
     -no-kms \
-    -no-evdev \
-    -no-xkbcommon-evdev \
     \
     -qt-xcb \
+    -qt-xkbcommon-x11 \
     -qt-zlib \
     -qt-libpng \
     -qt-libjpeg \

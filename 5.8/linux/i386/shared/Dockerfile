@@ -19,6 +19,7 @@ RUN apt-get -y install \
     lib32stdc++-5-dev \
     libssl-dev:i386 \
     libcrypto++-dev:i386 \
+    libc6-dev:i386 \
     libsqlite3-dev:i386 \
 #    libmysqlclient-dev:i386 \
 #    libpq-dev:i386 \
@@ -39,7 +40,6 @@ RUN apt-get -y install \
     libnss3-dev:i386 \
     libpci-dev:i386 \
     libpulse-dev:i386 \
-    libssl-dev:i386 \
     libudev-dev:i386 \
     libx11-dev:i386 \
     libx11-xcb-dev:i386 \
@@ -119,7 +119,11 @@ RUN apt-get -y install \
     libxrender-dev:i386 \
     libxslt-dev:i386 \
     libxss-dev:i386 \
-    libxtst-dev:i386
+    libxtst-dev:i386 \
+    libexpat1-dev:i386 \
+    libevdev-dev:i386 \
+    libxkbcommon-dev:i386 \
+    libxkbcommon-x11-dev:i386
 
 RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 10
 RUN update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 10
@@ -128,10 +132,10 @@ RUN mkdir /build
 
 WORKDIR /build
 
-RUN wget -q https://download.qt.io/snapshots/qt/5.8/5.8.0/latest_src/qt-everywhere-opensource-src-5.8.0.tar.gz
+RUN wget -q http://download.qt.io/archive/qt/5.8/5.8.0/single/qt-everywhere-opensource-src-5.8.0.tar.gz
 RUN tar -zxf qt-everywhere-opensource-src-5.8.0.tar.gz
 
-WORKDIR  ./qt-everywhere-opensource-src-5.8.0
+WORKDIR /build/qt-everywhere-opensource-src-5.8.0
 
 RUN ./configure \
     -v \
@@ -155,6 +159,7 @@ RUN ./configure \
     -skip qtsensors \
     -skip qtserialbus \
     -skip qttools \
+    -skip qtwayland \
     -skip qtwebchannel \
     -skip qtwebkit \
     -skip qtwebsockets \
@@ -175,10 +180,9 @@ RUN ./configure \
     -no-iconv \
     -no-tslib \
     -no-kms \
-    -no-evdev \
-    -no-xkbcommon-evdev \
     \
     -qt-xcb \
+    -qt-xkbcommon-x11 \
     -qt-zlib \
     -qt-libpng \
     -qt-libjpeg \
