@@ -187,13 +187,15 @@ WORKDIR /build/qt-everywhere-opensource-src-5.8.0
 
 RUN sed -i -E -e 's|(QMAKE\_LFLAGS.*)|\1 -ldl|g' qtbase/mkspecs/linux-g++-32/qmake.conf
 
-RUN ./configure \
+RUN PKG_CONFIG_PATH="/usr/local/ssl/lib/pkgconfig:/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH" \
+    ./configure \
     -v \
     -static \
     -release \
     -platform linux-g++-32 \
     -opensource \
     -confirm-license \
+    -force-pkg-config \
     \
     -skip qt3d \
     -skip qtactiveqt \

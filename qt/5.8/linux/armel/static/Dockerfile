@@ -189,13 +189,20 @@ RUN tar -zxf qt-everywhere-opensource-src-5.8.0.tar.gz
 
 WORKDIR  /build/qt-everywhere-opensource-src-5.8.0
 
-RUN ./configure \
+RUN sed -i -E -e 's|load\(qt_config\)||g' qtbase/mkspecs/linux-arm-gnueabi-g++/qmake.conf
+RUN echo "QMAKE_CFLAGS += -marm -mfpu=vfp -march=armv5 -mabi=aapcs-linux" >> qtbase/mkspecs/linux-arm-gnueabi-g++/qmake.conf
+RUN echo "QMAKE_CXXFLAGS = \$\$QMAKE_CFLAGS" >> qtbase/mkspecs/linux-arm-gnueabi-g++/qmake.conf
+RUN echo "load(qt_config)" >> qtbase/mkspecs/linux-arm-gnueabi-g++/qmake.conf
+
+RUN PKG_CONFIG_PATH="/usr/local/ssl/lib/pkgconfig:/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH" \
+    ./configure \
     -v \
     -static \
     -release \
     -xplatform linux-arm-gnueabi-g++ \
     -opensource \
     -confirm-license \
+    -force-pkg-config \
     -sysroot / \
     \
     -skip qt3d \
