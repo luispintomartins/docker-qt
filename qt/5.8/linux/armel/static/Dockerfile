@@ -10,24 +10,25 @@ RUN echo "deb http://emdebian.org/tools/debian/ jessie main" >> /etc/apt/sources
 
 RUN apt-get update
 
-RUN apt-get install -y \
+RUN apt-get -y install \
     wget \
     tar \
     coreutils \
     bison \
+    build-essential \
     flex \
     gperf \
     perl \
     python \
     ruby \
-    qt5-qmake \
-    crossbuild-essential-armel \
+#    qt5-qmake \
+#    ncurses-dev:armel \
+#    libfl-dev:armel \
     gfortran-arm-linux-gnueabi \
-    ncurses-dev:armel \
-    libexpat1-dev:armel \
-    libfl-dev:armel \
+    crossbuild-essential-armel \
     libssl-dev:armel \
     libcrypto++-dev:armel \
+    libc6-dev:armel \
     libsqlite3-dev:armel \
 #    libmysqlclient-dev:armel \
 #    libpq-dev:armel \
@@ -128,6 +129,10 @@ RUN apt-get install -y \
     libxslt-dev:armel \
     libxss-dev:armel \
     libxtst-dev:armel
+    libexpat1-dev:armel \
+    libevdev-dev:armel \
+    libxkbcommon-dev:armel \
+    libxkbcommon-x11-dev:armel
 
 RUN mkdir /build
 
@@ -140,10 +145,19 @@ WORKDIR /build/dbus-1.10.14
 
 RUN CC=arm-linux-gnueabi-gcc \
     ./configure \
-    --build=x86_64-pc-linux-gnu \
     -host=arm-linux
+    --build=x86_64-pc-linux-gnu \
+    --disable-tests \
+    --disable-verbose-mode \
+    --disable-asserts \
+    --disable-maintainer-mode \
+    --disable-silent-rules \
+    --disable-launchd \
+    --disable-doxygen-docs \
+    --disable-xml-docs \
+    CFLAGS='-DPROCESS_QUERY_LIMITED_INFORMATION=0x1000' \
 
-RUN make -k -j$(nproc --all)
+RUN make -j$(nproc --all)
 RUN make install
 
 WORKDIR /build
@@ -154,9 +168,10 @@ RUN tar -zxf zlib-1.2.11.tar.gz
 WORKDIR /build/zlib-1.2.11
 
 RUN CHOST=arm-linux-gnueabi \
-    ./configure
+    ./configure \
+    --static
     
-RUN make -k -j$(nproc --all)
+RUN make -j$(nproc --all)
 RUN make install
 
 WORKDIR /build
@@ -166,25 +181,28 @@ RUN tar -zxf openssl-1.0.2k.tar.gz
 
 WORKDIR /build/openssl-1.0.2k
 
-RUN CC=arm-linux-gnueabi-gcc \
+RUN CC=arm-linux-gnueabihf-gcc \
     ./Configure \
     linux-armv4 \
-    no-shared \
     zlib \
-    --with-zlib-include=/build/zlib-1.2.11/include \
-    --with-zlib-lib=/build/zlib-1.2.11/ \
-    -lz
+    no-shared \
+    no-capieng \
+    no-zlib-dynamic \
+    --with-zlib-include=/usr/local/lib/include \
+    --with-zlib-lib=/usr/local/lib \
+    -lz \
+    -fPIC
 
-RUN make -k -j$(nproc --all) \
+RUN make all -j$(nproc --all) \
     CC="arm-linux-gnueabi-gcc" \
-    AR="arm-linux-gnueabi-ar r" \
+    AR="arm-linux-gnueabi-ar rcu" \
     RANLIB="arm-linux-gnueabi-ranlib" \
     LD="arm-linux-gnueabi-ld"
-RUN make install
+RUN make install_sw
 
 WORKDIR /build
 
-RUN wget -q https://download.qt.io/snapshots/qt/5.8/5.8.0/latest_src/qt-everywhere-opensource-src-5.8.0.tar.gz
+RUN wget -q http://download.qt.io/archive/qt/5.8/5.8.0/single/qt-everywhere-opensource-src-5.8.0.tar.gz
 RUN tar -zxf qt-everywhere-opensource-src-5.8.0.tar.gz
 
 WORKDIR  /build/qt-everywhere-opensource-src-5.8.0
@@ -194,7 +212,11 @@ RUN echo "QMAKE_CFLAGS += -marm -mfpu=vfp -march=armv5 -mabi=aapcs-linux" >> qtb
 RUN echo "QMAKE_CXXFLAGS = \$\$QMAKE_CFLAGS" >> qtbase/mkspecs/linux-arm-gnueabi-g++/qmake.conf
 RUN echo "load(qt_config)" >> qtbase/mkspecs/linux-arm-gnueabi-g++/qmake.conf
 
-RUN PKG_CONFIG_PATH="/usr/local/ssl/lib/pkgconfig:/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH" \
+RUN OPENSSL_LIBS="-L/usr/local/ssl/lib -L/usr/local/lib -lssl -lcrypto -ldl -lz" \
+    PKG_CONFIG="/usr/bin/pkg-config" \
+    PKG_CONFIG_PATH="/usr/local/ssl/lib/pkgconfig:/usr/local/lib/pkgconfig" \
+    PKG_CONFIG_LIBDIR="/usr/local/ssl/lib:/usr/local/lib" \
+    PKG_CONFIG_SYSROOT_DIR="/" \
     ./configure \
     -v \
     -static \
@@ -241,30 +263,31 @@ RUN PKG_CONFIG_PATH="/usr/local/ssl/lib/pkgconfig:/usr/local/lib/pkgconfig:$PKG_
     -no-iconv \
     -no-tslib \
     -no-kms \
-    -no-evdev \
-    -no-xkbcommon-evdev \
     \
     -qt-xcb \
+    -qt-xkbcommon-x11 \
     -qt-zlib \
     -qt-libpng \
     -qt-libjpeg \
     -qt-freetype \
     -qt-harfbuzz \
     -qt-pcre \
+    -qt-sqlite \
     \
 #    -sql-mysql \
 #    -sql-psql \
-    -sqlite \
     \
     -dbus-linked \
     \
     -openssl-linked \
     \
-    -I/usr/local/ssl/include \
-    -I/usr/local/include
+    -I/usr/local/lib/dbus-1.0/include/ \
+    -I/usr/local/include/dbus-1.0/ \
+    -I/usr/local/ssl/include/ \
+    -I/usr/local/include/
 
-RUN make -k -j$(nproc --all)
-RUN make -k install
+RUN make -j$(nproc --all)
+RUN make install
 
 RUN update-alternatives --install /usr/bin/qmake qmake /usr/local/Qt-5.8.0/bin/qmake 10
 

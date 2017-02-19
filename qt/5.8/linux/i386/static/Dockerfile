@@ -139,11 +139,20 @@ WORKDIR /build/dbus-1.10.14
 
 RUN ./configure \
     --build=i686-pc-linux-gnu \
+    --disable-tests \
+    --disable-verbose-mode \
+    --disable-asserts \
+    --disable-maintainer-mode \
+    --disable-silent-rules \
+    --disable-launchd \
+    --disable-doxygen-docs \
+    --disable-xml-docs \
+    CFLAGS='-DPROCESS_QUERY_LIMITED_INFORMATION=0x1000' \
     "CFLAGS=-m32" \
     "CXXFLAGS=-m32" \
     "LDFLAGS=-m32"
 
-RUN make -k -j$(nproc --all)
+RUN make -j$(nproc --all)
 RUN make install
 
 WORKDIR /build
@@ -154,9 +163,10 @@ RUN tar -zxf zlib-1.2.11.tar.gz
 WORKDIR /build/zlib-1.2.11
 
 RUN CFLAGS=-m32 \
-    ./configure
+    ./configure \
+    --static
     
-RUN make -k -j$(nproc --all)
+RUN make -j$(nproc --all)
 RUN make install
 
 WORKDIR /build
@@ -166,17 +176,20 @@ RUN tar -zxf openssl-1.0.2k.tar.gz
 
 WORKDIR /build/openssl-1.0.2k
 
-RUN setarch i386 \
-    ./config \
+RUN ./Configure \
+    linux-x32 \
     -m32 \
-    no-shared \
     zlib \
+    no-shared \
+    no-capieng \
+    no-zlib-dynamic \
     --with-zlib-include=/usr/local/lib/include \
     --with-zlib-lib=/usr/local/lib \
-    -lz
+    -lz \
+    -fPIC
 
-RUN make -k -j$(nproc --all)
-RUN make install
+RUN make all -j$(nproc --all) AR="ar rcu"
+RUN make install_sw
 
 WORKDIR /build
 
@@ -185,9 +198,11 @@ RUN tar -zxf qt-everywhere-opensource-src-5.8.0.tar.gz
 
 WORKDIR /build/qt-everywhere-opensource-src-5.8.0
 
-RUN sed -i -E -e 's|(QMAKE\_LFLAGS.*)|\1 -ldl|g' qtbase/mkspecs/linux-g++-32/qmake.conf
-
-RUN PKG_CONFIG_PATH="/usr/local/ssl/lib/pkgconfig:/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH" \
+RUN OPENSSL_LIBS="-L/usr/local/ssl/lib -L/usr/local/lib -lssl -lcrypto -ldl -lz" \
+    PKG_CONFIG="/usr/bin/pkg-config" \
+    PKG_CONFIG_PATH="/usr/local/ssl/lib/pkgconfig:/usr/local/lib/pkgconfig" \
+    PKG_CONFIG_LIBDIR="/usr/local/ssl/lib:/usr/local/lib" \
+    PKG_CONFIG_SYSROOT_DIR="/" \
     ./configure \
     -v \
     -static \
@@ -242,20 +257,22 @@ RUN PKG_CONFIG_PATH="/usr/local/ssl/lib/pkgconfig:/usr/local/lib/pkgconfig:$PKG_
     -qt-freetype \
     -qt-harfbuzz \
     -qt-pcre \
+    -qt-sqlite \
     \
 #    -sql-mysql \
 #    -sql-psql \
-    -sqlite \
     \
-    -dbus-runtime \
+    -dbus-linked \
     \
-    -openssl-runtime \
+    -openssl-linked \
     \
-    -I/usr/local/ssl/include \
-    -I/usr/local/include
+    -I/usr/local/lib/dbus-1.0/include/ \
+    -I/usr/local/include/dbus-1.0/ \
+    -I/usr/local/ssl/include/ \
+    -I/usr/local/include/
 
-RUN make -k -j$(nproc --all)
-RUN make -k install
+RUN make -j$(nproc --all)
+RUN make install
 
 RUN update-alternatives --install /usr/bin/qmake qmake /usr/local/Qt-5.8.0/bin/qmake 10
 
