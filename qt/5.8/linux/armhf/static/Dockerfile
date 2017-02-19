@@ -39,9 +39,9 @@ RUN apt-get -y install \
     libcups2-dev:armhf \
     libdrm-dev:armhf \
     libegl1-mesa-dev:armhf \
-    libfontconfig1-dev:armhf \
-    libfreetype6-dev:armhf \
-    libgcrypt20-dev:armhf \
+#    libfontconfig1-dev:armhf \
+#    libfreetype6-dev:armhf \
+#    libgcrypt20-dev:armhf \
     libglu1-mesa-dev:armhf \
     libgstreamer0.10-dev:armhf \
     libicu-dev:armhf \
@@ -243,12 +243,12 @@ RUN OPENSSL_LIBS="-L/usr/local/ssl/lib -L/usr/local/lib -lssl -lcrypto -ldl -lz"
     -qt-zlib \
     -qt-libpng \
     -qt-libjpeg \
-    -qt-fontconfig \
     -qt-freetype \
     -qt-harfbuzz \
     -qt-pcre \
     -qt-sqlite \
     \
+    -fontconfig \
 #    -sql-mysql \
 #    -sql-psql \
     \

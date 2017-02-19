@@ -227,12 +227,12 @@ RUN OPENSSL_LIBS="-L/usr/local/ssl/lib -L/usr/local/lib -lssl -lcrypto -ldl -lz"
     -qt-zlib \
     -qt-libpng \
     -qt-libjpeg \
-    -qt-fontconfig \
     -qt-freetype \
     -qt-harfbuzz \
     -qt-pcre \
     -qt-sqlite \
     \
+    -fontconfig \
 #    -sql-mysql \
 #    -sql-psql \
     \
