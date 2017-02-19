@@ -15,12 +15,10 @@ RUN apt-get -y install \
     ruby \
     gcc-5 \
     g++-5 \
+    libc6-dev-i386 \
+    libgcc-5-dev:i386 \
     lib32gcc-5-dev \
     lib32stdc++-5-dev \
-#    libssl-dev:i386 \
-#    libcrypto++-dev:i386 \
-    libc6-dev:i386 \
-    libsqlite3-dev:i386 \
 #    libmysqlclient-dev:i386 \
 #    libpq-dev:i386 \
     ibgstreamer-plugins-base0.10-dev:i386 \
@@ -31,9 +29,9 @@ RUN apt-get -y install \
     libcups2-dev:i386 \
     libdrm-dev:i386 \
     libegl1-mesa-dev:i386 \
-    libfontconfig1-dev:i386 \
-    libfreetype6-dev:i386 \
-    libgcrypt20-dev:i386 \
+#    libfontconfig1-dev:i386 \
+#    libfreetype6-dev:i386 \
+#    libgcrypt20-dev:i386 \
     libglu1-mesa-dev:i386 \
     libgstreamer0.10-dev:i386 \
     libicu-dev:i386 \
@@ -120,7 +118,6 @@ RUN apt-get -y install \
     libxslt-dev:i386 \
     libxss-dev:i386 \
     libxtst-dev:i386 \
-    libexpat1-dev:i386 \
     libevdev-dev:i386 \
     libxkbcommon-dev:i386 \
     libxkbcommon-x11-dev:i386
@@ -132,31 +129,6 @@ RUN mkdir /build
 
 WORKDIR /build
 
-RUN wget -q http://dbus.freedesktop.org/releases/dbus/dbus-1.10.14.tar.gz
-RUN tar -zxf dbus-1.10.14.tar.gz
-
-WORKDIR /build/dbus-1.10.14
-
-RUN ./configure \
-    --build=i686-pc-linux-gnu \
-    --disable-tests \
-    --disable-verbose-mode \
-    --disable-asserts \
-    --disable-maintainer-mode \
-    --disable-silent-rules \
-    --disable-launchd \
-    --disable-doxygen-docs \
-    --disable-xml-docs \
-    CFLAGS='-DPROCESS_QUERY_LIMITED_INFORMATION=0x1000' \
-    "CFLAGS=-m32" \
-    "CXXFLAGS=-m32" \
-    "LDFLAGS=-m32"
-
-RUN make -j$(nproc --all)
-RUN make install
-
-WORKDIR /build
-
 RUN wget -q http://www.zlib.net/zlib-1.2.11.tar.gz
 RUN tar -zxf zlib-1.2.11.tar.gz
 
@@ -165,7 +137,7 @@ WORKDIR /build/zlib-1.2.11
 RUN CFLAGS=-m32 \
     ./configure \
     --static
-    
+
 RUN make -j$(nproc --all)
 RUN make install
 
@@ -177,7 +149,7 @@ RUN tar -zxf openssl-1.0.2k.tar.gz
 WORKDIR /build/openssl-1.0.2k
 
 RUN ./Configure \
-    linux-x32 \
+    linux-generic32 \
     -m32 \
     zlib \
     no-shared \
@@ -248,12 +220,14 @@ RUN OPENSSL_LIBS="-L/usr/local/ssl/lib -L/usr/local/lib -lssl -lcrypto -ldl -lz"
     -no-iconv \
     -no-tslib \
     -no-kms \
+    -no-dbus \
     \
     -qt-xcb \
     -qt-xkbcommon-x11 \
     -qt-zlib \
     -qt-libpng \
     -qt-libjpeg \
+    -qt-fontconfig \
     -qt-freetype \
     -qt-harfbuzz \
     -qt-pcre \
@@ -262,12 +236,8 @@ RUN OPENSSL_LIBS="-L/usr/local/ssl/lib -L/usr/local/lib -lssl -lcrypto -ldl -lz"
 #    -sql-mysql \
 #    -sql-psql \
     \
-    -dbus-linked \
-    \
     -openssl-linked \
     \
-    -I/usr/local/lib/dbus-1.0/include/ \
-    -I/usr/local/include/dbus-1.0/ \
     -I/usr/local/ssl/include/ \
     -I/usr/local/include/
 

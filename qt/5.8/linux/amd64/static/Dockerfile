@@ -15,13 +15,10 @@ RUN apt-get -y install \
     ruby \
     gcc-5 \
     g++-5 \
+    libc6-dev:amd64 \
     libgcc-5-dev:amd64 \
     lib32gcc-5-dev:amd64 \
     lib32stdc++-5-dev:amd64 \
-#    libssl-dev:amd64 \
-#    libcrypto++-dev:amd64 \
-    libc6-dev:amd64 \
-    libsqlite3-dev:amd64 \
 #    libmysqlclient-dev:amd64 \
 #    libpq-dev:amd64 \
     ibgstreamer-plugins-base0.10-dev:amd64 \
@@ -32,9 +29,9 @@ RUN apt-get -y install \
     libcups2-dev:amd64 \
     libdrm-dev:amd64 \
     libegl1-mesa-dev:amd64 \
-    libfontconfig1-dev:amd64 \
-    libfreetype6-dev:amd64 \
-    libgcrypt20-dev:amd64 \
+#    libfontconfig1-dev:amd64 \
+#    libfreetype6-dev:amd64 \
+#    libgcrypt20-dev:amd64 \
     libglu1-mesa-dev:amd64 \
     libgstreamer0.10-dev:amd64 \
     libicu-dev:amd64 \
@@ -121,7 +118,6 @@ RUN apt-get -y install \
     libxslt-dev:amd64 \
     libxss-dev:amd64 \
     libxtst-dev:amd64 \
-    libexpat1-dev:amd64 \
     libevdev-dev:amd64 \
     libxkbcommon-dev:amd64 \
     libxkbcommon-x11-dev:amd64
@@ -133,31 +129,6 @@ RUN mkdir /build
 
 WORKDIR /build
 
-RUN wget -q http://dbus.freedesktop.org/releases/dbus/dbus-1.10.14.tar.gz
-RUN tar -zxf dbus-1.10.14.tar.gz
-
-WORKDIR /build/dbus-1.10.14
-
-RUN ./configure \
-    --build=x86_64-pc-linux-gnu \
-    --disable-tests \
-    --disable-verbose-mode \
-    --disable-asserts \
-    --disable-maintainer-mode \
-    --disable-silent-rules \
-    --disable-launchd \
-    --disable-doxygen-docs \
-    --disable-xml-docs \
-    CFLAGS='-DPROCESS_QUERY_LIMITED_INFORMATION=0x1000' \
-    CFLAGS='-m64' \
-    CXXFLAGS='-m64' \
-    LDFLAGS='-m64'
-
-RUN make -j$(nproc --all)
-RUN make install
-
-WORKDIR /build
-
 RUN wget -q http://www.zlib.net/zlib-1.2.11.tar.gz
 RUN tar -zxf zlib-1.2.11.tar.gz
 
@@ -166,7 +137,7 @@ WORKDIR /build/zlib-1.2.11
 RUN CFLAGS=-m64 \
     ./configure \
     --static
-    
+
 RUN make -j$(nproc --all)
 RUN make install
 
@@ -178,7 +149,7 @@ RUN tar -zxf openssl-1.0.2k.tar.gz
 WORKDIR /build/openssl-1.0.2k
 
 RUN ./Configure \
-    linux-x86_64 \
+    linux-generic64 \
     -m64 \
     zlib \
     no-shared \
@@ -249,12 +220,14 @@ RUN OPENSSL_LIBS="-L/usr/local/ssl/lib -L/usr/local/lib -lssl -lcrypto -ldl -lz"
     -no-iconv \
     -no-tslib \
     -no-kms \
+    -no-dbus \
     \
     -qt-xcb \
     -qt-xkbcommon-x11 \
     -qt-zlib \
     -qt-libpng \
     -qt-libjpeg \
+    -qt-fontconfig \
     -qt-freetype \
     -qt-harfbuzz \
     -qt-pcre \
@@ -263,12 +236,8 @@ RUN OPENSSL_LIBS="-L/usr/local/ssl/lib -L/usr/local/lib -lssl -lcrypto -ldl -lz"
 #    -sql-mysql \
 #    -sql-psql \
     \
-    -dbus-linked \
-    \
     -openssl-linked \
     \
-    -I/usr/local/lib/dbus-1.0/include/ \
-    -I/usr/local/include/dbus-1.0/ \
     -I/usr/local/ssl/include/ \
     -I/usr/local/include/
 

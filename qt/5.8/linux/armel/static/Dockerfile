@@ -22,14 +22,13 @@ RUN apt-get -y install \
     python \
     ruby \
 #    qt5-qmake \
-#    ncurses-dev:armel \
-#    libfl-dev:armel \
     gfortran-arm-linux-gnueabi \
     crossbuild-essential-armel \
+    libc6-dev:armel \
+#    ncurses-dev:armel \
+#    libfl-dev:armel \
     libssl-dev:armel \
     libcrypto++-dev:armel \
-    libc6-dev:armel \
-    libsqlite3-dev:armel \
 #    libmysqlclient-dev:armel \
 #    libpq-dev:armel \
     ibgstreamer-plugins-base0.10-dev:armel \
@@ -128,37 +127,12 @@ RUN apt-get -y install \
     libxrender-dev:armel \
     libxslt-dev:armel \
     libxss-dev:armel \
-    libxtst-dev:armel
-    libexpat1-dev:armel \
+    libxtst-dev:armel \
     libevdev-dev:armel \
     libxkbcommon-dev:armel \
     libxkbcommon-x11-dev:armel
 
 RUN mkdir /build
-
-WORKDIR /build
-
-RUN wget -q http://dbus.freedesktop.org/releases/dbus/dbus-1.10.14.tar.gz
-RUN tar -zxf dbus-1.10.14.tar.gz
-
-WORKDIR /build/dbus-1.10.14
-
-RUN CC=arm-linux-gnueabi-gcc \
-    ./configure \
-    -host=arm-linux
-    --build=x86_64-pc-linux-gnu \
-    --disable-tests \
-    --disable-verbose-mode \
-    --disable-asserts \
-    --disable-maintainer-mode \
-    --disable-silent-rules \
-    --disable-launchd \
-    --disable-doxygen-docs \
-    --disable-xml-docs \
-    CFLAGS='-DPROCESS_QUERY_LIMITED_INFORMATION=0x1000' \
-
-RUN make -j$(nproc --all)
-RUN make install
 
 WORKDIR /build
 
@@ -170,7 +144,7 @@ WORKDIR /build/zlib-1.2.11
 RUN CHOST=arm-linux-gnueabi \
     ./configure \
     --static
-    
+
 RUN make -j$(nproc --all)
 RUN make install
 
@@ -263,12 +237,14 @@ RUN OPENSSL_LIBS="-L/usr/local/ssl/lib -L/usr/local/lib -lssl -lcrypto -ldl -lz"
     -no-iconv \
     -no-tslib \
     -no-kms \
+    -no-dbus \
     \
     -qt-xcb \
     -qt-xkbcommon-x11 \
     -qt-zlib \
     -qt-libpng \
     -qt-libjpeg \
+    -qt-fontconfig \
     -qt-freetype \
     -qt-harfbuzz \
     -qt-pcre \
@@ -277,12 +253,8 @@ RUN OPENSSL_LIBS="-L/usr/local/ssl/lib -L/usr/local/lib -lssl -lcrypto -ldl -lz"
 #    -sql-mysql \
 #    -sql-psql \
     \
-    -dbus-linked \
-    \
     -openssl-linked \
     \
-    -I/usr/local/lib/dbus-1.0/include/ \
-    -I/usr/local/include/dbus-1.0/ \
     -I/usr/local/ssl/include/ \
     -I/usr/local/include/
 
