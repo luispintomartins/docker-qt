@@ -548,4 +548,4 @@ update-alternatives --install /usr/bin/qmake qmake $TARGET_PREFIX/Qt-5.8.0/bin/q
 
 rm -rf /build
 
-mkdir /src
+mkdir -p /src

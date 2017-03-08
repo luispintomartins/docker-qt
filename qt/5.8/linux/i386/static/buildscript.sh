@@ -120,7 +120,7 @@ apt-get -y install --no-install-recommends \
 update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 10
 update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 10
 
-mkdir /build
+mkdir -p /build
 
 # +++++++++++++++++++++++++++++++++++++++++++
 # + PTHREADS
@@ -396,7 +396,9 @@ cd /build/openssl-1.0.2k
     zlib \
     no-zlib-dynamic
 
-make all -j1 AR="ar rcu"
+make all -j1 \
+    AR="ar rcu"
+    
 make install_sw
 
 # +++++++++++++++++++++++++++++++++++++++++++
