@@ -28,4 +28,4 @@ sudo apt-get -y install \
 # apt-cache madison docker-engine
 
 sudo apt-get -y install \
-	docker-engine=1.12.3-0~xenial
+	docker-engine
