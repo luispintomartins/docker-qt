@@ -45,7 +45,7 @@ git clone https://github.com/mxe/mxe.git
 
 cd /build/mxe
 
-git checkout -b mxe_5_8 27facf1c6fcb7973781568dde9b0c1072e28f669
+# git checkout -b mxe_5_8 27facf1c6fcb7973781568dde9b0c1072e28f669
 
 make MXE_TARGETS='x86_64-w64-mingw32.static' \
     qtbase \
