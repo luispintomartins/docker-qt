@@ -7,8 +7,7 @@ GCC_HOST=""
 GCC_BUILD=""
 GCC_TARGET=""
 TARGET_ARCH="armhf"
-TARGET_ARCH_CC="gnueabihf"
-TARGET_ARCH_HOST="arm-linux-"$TARGET_ARCH_CC
+TARGET_ARCH_HOST="arm-linux-gnueabihf"
 TARGET_PREFIX="/usr/local"
 
 dpkg --add-architecture $TARGET_ARCH
@@ -130,14 +129,18 @@ tar -zxf qt-everywhere-opensource-src-5.8.0.tar.gz
 
 cd /build/qt-everywhere-opensource-src-5.8.0
 
-cp -R qtbase/mkspecs/linux-arm-gnueabi-g++ qtbase/mkspecs/linux-arm-$TARGET_ARCH_CC-g++ 
-sed -i -E -e 's|arm-linux-gnueabi-(.*)|arm-linux-'$TARGET_ARCH_CC'-\1|g' qtbase/mkspecs/linux-arm-$TARGET_ARCH_CC-g++/qmake.conf
+cp -R qtbase/mkspecs/linux-arm-gnueabi-g++ qtbase/mkspecs/$TARGET_ARCH_HOST
+sed -i -E -e 's|arm-linux-gnueabi-(.*)|'$TARGET_ARCH_HOST'-\1|g' qtbase/mkspecs/$TARGET_ARCH_HOST/qmake.conf
 
-./configure \
+PKG_CONFIG="/usr/bin/pkg-config" \
+PKG_CONFIG_PATH=""$TARGET_PREFIX"/ssl/lib/pkgconfig/:"$TARGET_PREFIX"/lib/pkgconfig/:/usr/lib/"$TARGET_ARCH_HOST"/pkgconfig/" \
+PKG_CONFIG_LIBDIR=""$TARGET_PREFIX"/ssl/lib/:"$TARGET_PREFIX"/lib/" \
+PKG_CONFIG_SYSROOT_DIR="/" \
+    ./configure \
     -v \
     -shared \
     -release \
-    -xplatform linux-arm-$TARGET_ARCH_CC-g++ \
+    -xplatform $TARGET_ARCH_HOST \
     -c++std c++11 \
     -opensource \
     -confirm-license \
