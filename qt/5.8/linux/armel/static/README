@@ -1,7 +1,0 @@
-# BUILD COMMAND
-
-sudo docker build -t qt5.arm.armel.static:5.8 .
-
-# RUN COMMAND
-
-sudo docker run --rm -v "$PWD":/src/ -w /src/ qt5.arm.armel.static:5.8 <COMMAND (e.g. /bin/sh -c 'echo command'>
