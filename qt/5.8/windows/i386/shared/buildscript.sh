@@ -47,7 +47,8 @@ cd /build/mxe
 
 # git checkout -b mxe_5_8 27facf1c6fcb7973781568dde9b0c1072e28f669
 
-make MXE_TARGETS='i686-w64-mingw32.shared' \
+make -j$(nproc --all) \
+    MXE_TARGETS='i686-w64-mingw32.shared' \
     qtbase \
     qt5 \
     qtcharts \
