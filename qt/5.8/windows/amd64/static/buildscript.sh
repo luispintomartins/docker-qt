@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e 
 
 dpkg --add-architecture amd64
 apt-get update

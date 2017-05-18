@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e 
 
 GCC_CFLAGS="-m32"
 GCC_CPPFLAGS="-m32"

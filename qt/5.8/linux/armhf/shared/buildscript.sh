@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e 
 
 GCC_CFLAGS=""
 GCC_CPPFLAGS=""

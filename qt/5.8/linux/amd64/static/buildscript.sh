@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e 
 
 GCC_CFLAGS="-m64"
 GCC_CPPFLAGS="-m64"
