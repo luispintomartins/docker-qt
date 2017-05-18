@@ -1,32 +1,44 @@
 #!/bin/bash
+set -e 
 
-# USER DEFINED
-
-CURRENT_PATH=$PWD
 QT_VERSION="5.8"
+BUILD_DIR="$PWD"
+
+function clean {
+    # See: https://github.com/docker/docker/issues/3182
+
+    # Delete 'exited' containers
+    docker rm -v $(docker ps -a -q -f status=exited) &> /dev/null
+    # Delete 'dangling' images
+    docker rmi $(docker images -f "dangling=true" -q) &> /dev/null
+    # Delete 'dangling' volumes
+    docker volume rm $(docker volume ls -qf dangling=true) &> /dev/null
+}
+
+function build {
+    echo ""
+    echo "********************************************************************************"
+    echo "* BUILD TOOLCHAIN : qt.$1.$2.$3:$QT_VERSION"
+    echo "********************************************************************************"
+    echo ""
+    cd "$BUILD_DIR/qt/$QT_VERSION/$1/$2/$3" && docker build -t "qt.$1.$2.$3":"$QT_VERSION" .
+}
+
+# clean pending docker images
+trap 'clean' ERR
 
 # STATIC
 
-# windows i386
-cd $CURRENT_PATH/qt/$QT_VERSION/windows/i386/static     && docker build -t qt.windows.i386.static:$QT_VERSION .
-# windows amd64
-cd $CURRENT_PATH/qt/$QT_VERSION/windows/amd64/static    && docker build -t qt.windows.amd64.static:$QT_VERSION .
-# linux i386
-cd $CURRENT_PATH/qt/$QT_VERSION/linux/i386/static       && docker build -t qt.linux.i386.static:$QT_VERSION .
-# linux amd64
-cd $CURRENT_PATH/qt/$QT_VERSION/linux/amd64/static      && docker build -t qt.linux.amd64.static:$QT_VERSION .
-# linux armhf
-cd $CURRENT_PATH/qt/$QT_VERSION/linux/armhf/static      && docker build -t qt.linux.armhf.static:$QT_VERSION .
+build windows i386 static
+build windows amd64 static
+build linux i386 static
+build linux amd64 static
+build linux armhf static
 
 # SHARED
 
-# windows i386
-cd $CURRENT_PATH/qt/$QT_VERSION/windows/i386/shared     && docker build -t qt.windows.i386.shared:$QT_VERSION .
-# windows amd64
-cd $CURRENT_PATH/qt/$QT_VERSION/windows/amd64/shared    && docker build -t qt.windows.amd64.shared:$QT_VERSION .
-# linux i386
-cd $CURRENT_PATH/qt/$QT_VERSION/linux/i386/shared       && docker build -t qt.linux.i386.shared:$QT_VERSION .
-# linux amd64
-cd $CURRENT_PATH/qt/$QT_VERSION/linux/amd64/shared      && docker build -t qt.linux.amd64.shared:$QT_VERSION .
-# linux armhf
-cd $CURRENT_PATH/qt/$QT_VERSION/linux/armhf/shared      && docker build -t qt.linux.armhf.shared:$QT_VERSION .
+build windows i386 shared
+build windows amd64 shared
+build linux i386 shared
+build linux amd64 shared
+build linux armhf shared
