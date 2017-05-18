@@ -21,7 +21,11 @@ function build {
     echo "* BUILD TOOLCHAIN : qt.$1.$2.$3:$QT_VERSION"
     echo "********************************************************************************"
     echo ""
-    cd "$BUILD_DIR/qt/$QT_VERSION/$1/$2/$3" && docker build -t "qt.$1.$2.$3":"$QT_VERSION" .
+    if [ -z "$(docker images -q qt.$1.$2.$3":"$QT_VERSION)" ]; then
+        cd "$BUILD_DIR/qt/$QT_VERSION/$1/$2/$3" && docker build -t "qt.$1.$2.$3":"$QT_VERSION" .
+    else
+        echo "Docker image already built, skipping..."
+    fi
 }
 
 # clean pending docker images
