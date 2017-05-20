@@ -33,16 +33,20 @@ trap 'clean' ERR
 
 # STATIC
 
-build windows i386 static
-build windows amd64 static
-build linux i386 static
-build linux amd64 static
-build linux armhf static
+if [ "$1" == "static" ] || [ "$1" == "all" ]; then
+    build windows i386 static
+    build windows amd64 static
+    build linux i386 static
+    build linux amd64 static
+    build linux armhf static
+fi
 
 # SHARED
 
-build windows i386 shared
-build windows amd64 shared
-build linux i386 shared
-build linux amd64 shared
-build linux armhf shared
+if [ "$1" == "shared" ] || [ "$1" == "all" ]; then
+    build windows i386 shared
+    build windows amd64 shared
+    build linux i386 shared
+    build linux amd64 shared
+    build linux armhf shared
+fi
