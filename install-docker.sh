@@ -29,3 +29,9 @@ sudo apt-get -y install \
 
 sudo apt-get -y install \
 	docker-engine
+
+sudo groupadd docker
+
+sudo gpasswd -a ${USER} docker
+
+sudo service docker restart
