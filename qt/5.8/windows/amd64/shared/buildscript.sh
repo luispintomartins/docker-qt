@@ -46,7 +46,7 @@ git clone https://github.com/mxe/mxe.git
 
 cd /build/mxe
 
-# git checkout -b mxe_5_8 27facf1c6fcb7973781568dde9b0c1072e28f669
+git checkout -b mxe_5_8 5e9806e0894e8565ed7c3f9b73c03a2e37814f45
 
 make -j$(nproc --all) \
     MXE_TARGETS='x86_64-w64-mingw32.shared' \
@@ -73,4 +73,4 @@ update-alternatives --install /usr/bin/x86_64-w64-mingw32.shared-gcc x86_64-w64-
 update-alternatives --install /usr/bin/x86_64-w64-mingw32.shared-g++ x86_64-w64-mingw32.shared-g++ /build/mxe/usr/bin/x86_64-w64-mingw32.shared-g++ 10
 update-alternatives --install /usr/bin/x86_64-w64-mingw32.shared-windres x86_64-w64-mingw32.shared-windres /build/mxe/usr/bin/x86_64-w64-mingw32.shared-windres 10
 
-mkdir p /src
+mkdir -p /src

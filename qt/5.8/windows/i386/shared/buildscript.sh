@@ -40,13 +40,13 @@ apt-get install -y --no-install-recommends \
     wget
 
 mkdir -p /build
-cd  /build
+cd /build
 
 git clone https://github.com/mxe/mxe.git
 
 cd /build/mxe
 
-# git checkout -b mxe_5_8 27facf1c6fcb7973781568dde9b0c1072e28f669
+git checkout -b mxe_5_8 5e9806e0894e8565ed7c3f9b73c03a2e37814f45
 
 make -j$(nproc --all) \
     MXE_TARGETS='i686-w64-mingw32.shared' \
